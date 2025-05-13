@@ -1,0 +1,90 @@
+/* CourseContent.css */
+.course-content-container {
+  height: calc(100vh - 56px);
+  overflow: hidden;
+}
+
+.sidebar {
+  background: #f8f9fa;
+  border-right: 1px solid #dee2e6;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-overview {
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.section-header {
+  background: #fff;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.lecture-list {
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+}
+
+.lecture-item {
+  padding: 0.75rem 1rem;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.lecture-item:hover {
+  background: #e9ecef;
+}
+
+.lecture-title {
+  font-size: 0.95rem;
+}
+
+.main-panel .video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.main-panel .video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.badges .badge {
+  font-size: 0.75rem;
+  padding: 0.4em 0.6em;
+}
+
+.lesson-content {
+  line-height: 1.6;
+}
+
+.lesson-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  border-radius: 8px;
+}
+
+.nav-tabs {
+  margin-bottom: 1rem;
+}
+
+.quiz-question {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.progress-bar {
+  transition: width 0.3s ease-in-out;
+}

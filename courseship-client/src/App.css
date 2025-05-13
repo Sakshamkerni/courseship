@@ -1,0 +1,146 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* Dashboard Sidebar Collapsed Style */
+.sidebar.collapsed .list-group-item {
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 10px;
+}
+/* Hover Animation for Sidebar Links */
+.sidebar .list-group-item {
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.sidebar .list-group-item:hover {
+  background-color: #d8eefe;
+  transform: translateX(5px);
+}
+
+/* hero */
+.home-hero {
+  background: linear-gradient(135deg, #f0f8ff, #e0f7fa);
+  padding: 50px 20px;
+}
+
+.home-hero h1 {
+  font-size: 3rem;
+  color: #003366;
+}
+
+.home-hero p {
+  color: #555;
+}
+
+.btn-lg {
+  padding: 12px 30px;
+  font-size: 1.2rem;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  transition: 0.3s;
+}
+
+/* Footer Styles */
+footer {
+  background-color: #003366;
+}
+
+footer h5 {
+  font-weight: bold;
+}
+
+footer p, footer a, footer small {
+  color: #dcdcdc;
+}
+
+footer a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.navbar {
+  background-color: #003366 !important;
+}
+
+.navbar-brand {
+  font-size: 1.8rem;
+}
+
+.nav-link {
+  font-size: 1.1rem;
+  margin-right: 15px;
+}
+
+.nav-link:hover {
+  color: #ffcc00 !important;
+}
+
+
+.card-title {
+  color: #003366;
+  font-weight: bold;
+}
+
+.card-text {
+  color: #555;
+}
+
+
+.card {
+  border-radius: 10px;
+}
+
+.badge {
+  font-size: 0.9rem;
+  padding: 0.5em 0.75em;
+}
+
+h2, h4, h5 {
+  color: #343a40;
+}
+
+.accordion-button {
+  font-weight: 500;
+}
+
+
+
+
+

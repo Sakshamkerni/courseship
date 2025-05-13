@@ -1,0 +1,35 @@
+import React, { useState } from 'react';
+import PostGig from '../pages/dashboard/PostGig'; // ✅ Correct import
+import MyGigList from '../components/company/MyGigList';
+
+const CompanyDashboard = () => {
+  const [view, setView] = useState('myGigs');
+
+  return (
+    <div className="container mt-4">
+      <div className="row">
+        <div className="col-md-3">
+          <div className="list-group">
+            <button
+              onClick={() => setView('myGigs')}
+              className={`list-group-item list-group-item-action ${view === 'myGigs' ? 'active' : ''}`}
+            >
+              My Gigs
+            </button>
+            <button
+              onClick={() => setView('postGig')}
+              className={`list-group-item list-group-item-action ${view === 'postGig' ? 'active' : ''}`}
+            >
+              Post a Gig
+            </button>
+          </div>
+        </div>
+        <div className="col-md-9">
+          {view === 'myGigs' ? <MyGigList /> : <PostGig />}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CompanyDashboard;

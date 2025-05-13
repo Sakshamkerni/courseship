@@ -1,0 +1,28 @@
+.gig-card-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* Forces 1:1 aspect ratio */
+}
+
+.gig-card-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 170%;
+  width: 170%;
+  border-radius: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  transition: box-shadow 0.2s ease;
+}
+
+.gig-card-inner:hover {
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+}
+.gig-square-card {
+  height: 380px;       /* pick your desired square size */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
