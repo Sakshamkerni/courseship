@@ -1,13 +1,13 @@
+// src/pages/ApplyGig.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const ApplyGig = () => {
   const { gigId } = useParams();
-  const navigate = useNavigate();
-  const [form, setForm] = useState({
-    name: '', email: '', phone: '', collegeName: '', coverLetter: ''
-  });
+  const navigate    = useNavigate();
+
+  const [form, setForm]     = useState({ name:'', email:'', phone:'', collegeName:'', coverLetter:'' });
   const [resume, setResume] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -23,9 +23,7 @@ const ApplyGig = () => {
     }));
   }, []);
 
-  const onChange = e =>
-    setForm({ ...form, [e.target.name]: e.target.value });
-
+  const onChange = e => setForm({ ...form, [e.target.name]: e.target.value });
   const onFileChange = e => setResume(e.target.files[0]);
 
   const onSubmit = async e => {
@@ -40,20 +38,27 @@ const ApplyGig = () => {
       setLoading(true);
       const token = localStorage.getItem('token');
       await axios.post(
-        `/api/applications/${gigId}`,
+        // 🔥 Use full backend URL (not relative)
+        `http://localhost:5000/api/applications/${gigId}`,
         data,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-            Authorization: token
+            // 🔥 Include Bearer prefix
+            Authorization: `Bearer ${token}`
           }
         }
       );
+
       alert('Application submitted!');
       navigate('/dashboard/applied-gigs');
     } catch (err) {
       console.error(err);
-      alert('Submission failed');
+      alert(
+        err.response?.data?.msg ||
+        err.response?.data?.message ||
+        'Submission failed'
+      );
     } finally {
       setLoading(false);
     }

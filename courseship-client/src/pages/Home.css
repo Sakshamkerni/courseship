@@ -1,0 +1,12 @@
+.fade-in-hero {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInHero 1.2s ease-in-out forwards;
+}
+
+@keyframes fadeInHero {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

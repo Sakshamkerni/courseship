@@ -9,10 +9,18 @@ require('dotenv').config();
 const app = express();
 
 // 🔧 Ensure uploads/ exists before anything else
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
+// const uploadDir = path.join(__dirname, 'uploads');
+// if (!fs.existsSync(uploadDir)) {
+//   fs.mkdirSync(uploadDir);
+// }
+
+const uploadDir       = path.join(__dirname, 'uploads');
+ const resumeUploadDir = path.join(uploadDir, 'resumes');
+ [uploadDir, resumeUploadDir].forEach(dir => {
+   if (!fs.existsSync(dir)) {
+     fs.mkdirSync(dir, { recursive: true });
+  }
+ });
 
 // Middleware 🔥
 app.use(cors());
@@ -38,6 +46,14 @@ app.use('/api/admin', adminRoutes);
 
 // Serve uploaded files statically
 app.use('/uploads', express.static(uploadDir));
+
+// JSON error handler
+app.use((err, req, res, next) => {
+  console.error('🔥 Uncaught error:', err);
+  res.status(err.status || 500).json({
+    error: err.message || 'Internal Server Error'
+  });
+});
 
 // Test route
 app.get('/', (req, res) => {

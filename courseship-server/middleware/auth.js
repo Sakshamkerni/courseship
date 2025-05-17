@@ -1,9 +1,9 @@
 // courseship-server/middleware/auth.js
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');    //JWTs are used for authenticating users in our system (students, companies, admins).
 
 const auth = (req, res, next) => {
   const header = req.header('Authorization');
-  if (!header) return res.status(401).json({ message: 'No token, authorization denied' });
+  if (!header) return res.status(401).json({ message: 'No token, authorization denied' });  //This prevents unauthenticated users from proceeding further into protected routes.
 
   const token = header.replace('Bearer ', '').trim();
   if (!token) return res.status(401).json({ message: 'No token, authorization denied' });

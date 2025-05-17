@@ -99,6 +99,16 @@ function App() {
           </ProtectedRoute>
         } />
 
+        {/* Student “Apply” page */}
+        <Route
+          path="/apply-gig/:gigId"
+          element={
+            <ProtectedRoute roles={['student']}>
+              <ApplyGig />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Admin Dashboard with nested Manage Courses & Manage Users */}
         <Route path="/admin-dashboard/*" element={
           <ProtectedRoute roles={['admin']}>

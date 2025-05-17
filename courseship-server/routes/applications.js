@@ -1,131 +1,131 @@
 // courseship-server/routes/applications.js
-
-const express = require('express');
-const router = express.Router();
-const auth = require('../middleware/auth');
-const authorizeRole = require('../middleware/authorize');
+const express   = require('express');
+const multer    = require('multer');
+const path      = require('path');
+const auth      = require('../middleware/auth');
+const authorize = require('../middleware/authorize');
 const Application = require('../models/Application');
-const Gig = require('../models/Gig');
-const User = require('../models/User');
+const Gig         = require('../models/Gig');
 
-// POST /api/applications/apply → student applies to a gig
+const router = express.Router();
+
+// Multer setup
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, 'uploads/resumes/'),
+  filename:    (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `${Date.now()}-${req.user.id}${ext}`);
+  }
+});
+const upload = multer({ storage });
+
+// POST /api/applications/:gigId
 router.post(
-  '/apply',
+  '/:gigId',
   auth,
-  authorizeRole('student'),
+  authorize('student'),
+  upload.single('resume'),
   async (req, res) => {
     try {
-      const { gigId, coverLetter } = req.body;
-      const studentId = req.user.id;
-
-      // Prevent duplicate applications
-      const exists = await Application.findOne({ gigId, studentId });
-      if (exists) {
-        return res.status(400).json({ message: 'Already applied to this gig' });
+      const { name, email, phone, collegeName, coverLetter } = req.body;
+      if (!req.file) {
+        return res.status(400).json({ msg: 'Resume file is required' });
       }
 
-      const app = new Application({
-        gigId,
-        studentId,
-        coverLetter
+      // prevent duplicate
+      const exists = await Application.findOne({
+        gig: req.params.gigId,
+        student: req.user.id
       });
-      await app.save();
+      if (exists) {
+        return res.status(400).json({ msg: 'Already applied to this gig' });
+      }
 
-      res.status(201).json({ message: 'Applied successfully', application: app });
+      const application = new Application({
+        gig: req.params.gigId,
+        student: req.user.id,
+        name, email, phone, collegeName, coverLetter,
+        resumeUrl: `/uploads/resumes/${req.file.filename}`
+      });
+
+      await application.save();
+      res.status(201).json(application);
     } catch (err) {
-      console.error('Error applying to gig:', err);
-      res.status(500).json({ message: 'Application failed' });
+      console.error(err);
+      res.status(500).send('Server Error');
     }
   }
 );
 
-// GET /api/applications/my-applications → student’s applications
+// GET /api/applications/my-applications
 router.get(
   '/my-applications',
   auth,
-  authorizeRole('student'),
+  authorize('student'),
   async (req, res) => {
     try {
-      const studentId = req.user.id;
-
-      const apps = await Application.find({ studentId })
-        .populate('gigId')
+      const apps = await Application.find({ student: req.user.id })
+        .populate('gig', 'title')
         .sort({ createdAt: -1 });
-
       res.json(apps);
     } catch (err) {
-      console.error('Error fetching applications:', err);
-      res.status(500).json({ message: 'Failed to fetch applications' });
+      console.error(err);
+      res.status(500).json({ msg: 'Failed to fetch applications' });
     }
   }
 );
 
-// GET /api/applications/company → company’s incoming applications
+// GET /api/applications/company
 router.get(
   '/company',
   auth,
-  authorizeRole('company'),
+  authorize('company'),
   async (req, res) => {
     try {
-      const companyId = req.user.id;
-
-      // Find all gigs posted by this company
-      const gigs = await Gig.find({ companyId });
-      const gigIds = gigs.map(gig => gig._id);
-
-      // Find all applications for those gigs
-      const applications = await Application.find({ gigId: { $in: gigIds } })
-        .populate('gigId', 'title')
-        .populate('studentId', 'name email city')
+      const gigs = await Gig.find({ companyId: req.user.id });
+      const gigIds = gigs.map(g => g._id);
+      const applications = await Application.find({ gig: { $in: gigIds } })
+        .populate('gig', 'title')
+        .populate('student', 'name email city')
         .sort({ createdAt: -1 });
-
       res.json(applications);
     } catch (err) {
-      console.error('Error fetching company applications:', err);
-      res.status(500).json({ message: 'Failed to fetch applications' });
+      console.error(err);
+      res.status(500).json({ msg: 'Failed to fetch applications' });
     }
   }
 );
 
-// PATCH /api/applications/:id/status → company accepts/rejects
+// PATCH /api/applications/:id/status
 router.patch(
   '/:id/status',
   auth,
-  authorizeRole('company'),
+  authorize('company'),
   async (req, res) => {
     try {
-      const companyId = req.user.id;
-      const { id } = req.params;
-      const { status } = req.body; // expected 'accepted' or 'rejected'
-
-      if (!['accepted', 'rejected'].includes(status)) {
-        return res.status(400).json({ message: 'Invalid status' });
+      const { status } = req.body;
+      if (!['accepted','rejected'].includes(status)) {
+        return res.status(400).json({ msg: 'Invalid status' });
       }
 
-      // Load the application + its gig to verify ownership
-      const application = await Application.findById(id).populate('gigId');
-      if (!application) {
-        return res.status(404).json({ message: 'Application not found' });
-      }
-      if (application.gigId.companyId.toString() !== companyId) {
-        return res.status(403).json({ message: 'Not authorized' });
+      const application = await Application.findById(req.params.id).populate('gig');
+      if (!application) return res.status(404).json({ msg: 'Not found' });
+      if (application.gig.companyId.toString() !== req.user.id) {
+        return res.status(403).json({ msg: 'Not authorized' });
       }
 
       application.status = status;
       await application.save();
 
-      // Return updated record (with student & gig populated)
-      const updated = await Application.findById(id)
-        .populate('gigId', 'title')
-        .populate('studentId', 'name email city');
-
+      const updated = await Application.findById(req.params.id)
+        .populate('gig','title')
+        .populate('student','name email city');
       res.json(updated);
     } catch (err) {
-      console.error('Error updating application status:', err);
-      res.status(500).json({ message: 'Failed to update status' });
+      console.error(err);
+      res.status(500).json({ msg: 'Failed to update status' });
     }
   }
 );
-
 
 module.exports = router;

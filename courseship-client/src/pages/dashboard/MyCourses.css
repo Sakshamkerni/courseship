@@ -1,0 +1,30 @@
+/* src/pages/dashboard/MyCourses.css */
+
+.course-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.course-img {
+  height: 180px;
+  object-fit: cover;
+}
+
+.course-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.course-desc {
+  flex-grow: 1;
+  color: #555;
+}
+
+.progress {
+  height: 6px;
+  border-radius: 3px;
+}

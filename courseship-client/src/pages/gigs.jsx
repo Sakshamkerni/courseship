@@ -1,31 +1,23 @@
 // src/pages/gigs.jsx
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import GigCard from '../components/company/Gigcard';  // adjust path if needed
+import GigCard from '../components/company/Gigcard';
 
 const GigsPage = () => {
   const [gigs, setGigs] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/gigs')
+    axios
+      .get('http://localhost:5000/api/gigs')
       .then(res => setGigs(res.data))
       .catch(err => console.error(err));
   }, []);
 
-  // 1. Define the apply handler
-  const handleApply = async (gigId) => {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.post(
-        `http://localhost:5000/api/applications/apply`,
-        { gigId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      alert('Applied successfully!');
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || 'Failed to apply');
-    }
+  // Navigate to the ApplyGig form instead of POST’ing directly
+  const handleApply = (gigId) => {
+    navigate(`/apply-gig/${gigId}`);
   };
 
   return (
@@ -33,8 +25,11 @@ const GigsPage = () => {
       <h2>Available Gigs</h2>
       <div className="row">
         {gigs.map(gig => (
-          // 2. Pass handleApply as the onApply prop
-          <GigCard key={gig._id} gig={gig} onApply={handleApply} />
+          <GigCard
+            key={gig._id}
+            gig={gig}
+            onApply={handleApply}
+          />
         ))}
       </div>
     </div>

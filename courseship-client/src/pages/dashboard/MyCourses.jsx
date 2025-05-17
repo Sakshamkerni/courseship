@@ -1,7 +1,7 @@
-// src/pages/dashboard/MyCourses.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import './MyCourses.css'; // ← Import the new styles
 
 const MyCourses = () => {
   const [courses, setCourses] = useState([]);
@@ -32,23 +32,56 @@ const MyCourses = () => {
   return (
     <div className="container mt-4">
       <h2 className="mb-4">📚 My Enrolled Courses</h2>
+
       {courses.length === 0 ? (
         <div className="text-muted">You haven't enrolled in any courses yet.</div>
       ) : (
         <div className="row">
-          {courses.map((course) => (
+          {courses.map(course => (
             <div className="col-md-4 mb-4" key={course._id}>
-              <div className="card h-100 shadow-sm">
+              <div
+                className="card h-100 shadow-sm course-card"
+                onClick={() => (window.location.href = `/courses/${course._id}`)}
+              >
+                {course.imageUrl && (
+                  <img
+                    src={course.imageUrl}
+                    alt={course.title}
+                    className="card-img-top course-img"
+                  />
+                )}
+
                 <div className="card-body d-flex flex-column">
-                  <h5 className="card-title">{course.title}</h5>
-                  <p className="card-text">
-                    {course.description?.substring(0, 80)}...
+                  <h5 className="course-title">{course.title}</h5>
+
+                  <p className="course-desc mt-2 mb-4">
+                    {course.description?.length > 100
+                      ? `${course.description.slice(0, 100)}...`
+                      : course.description}
                   </p>
+
+                  {/* Static 0% progress bar – replace with real data when ready */}
+                  <div className="mb-3">
+                    <div className="d-flex justify-content-between align-items-center mb-1">
+                      <small className="text-muted">0% Complete</small>
+                    </div>
+                    <div className="progress">
+                      <div
+                        className="progress-bar bg-primary"
+                        role="progressbar"
+                        style={{ width: '0%' }}
+                        aria-valuenow={0}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                      />
+                    </div>
+                  </div>
+
                   <Link
                     to={`/courses/${course._id}`}
                     className="btn btn-primary mt-auto"
                   >
-                    Go to Course
+                    Continue Course
                   </Link>
                 </div>
               </div>

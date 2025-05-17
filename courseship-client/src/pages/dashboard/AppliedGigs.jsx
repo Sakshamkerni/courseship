@@ -1,33 +1,63 @@
-// courseship-client/src/pages/dashboard/AppliedGigs.jsx
+// src/pages/dashboard/AppliedGigs.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const AppliedGigs = () => {
-  const [apps, setApps] = useState([]);
+  const [applications, setApplications] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/applications/my-applications', {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    })
-    .then(res => setApps(res.data))
-    .catch(err => console.error(err));
+    const fetchApps = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await axios.get(
+          'http://localhost:5000/api/applications/my-applications',
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setApplications(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchApps();
   }, []);
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-5">
       <h2>My Applications</h2>
-      {apps.length === 0
-        ? <p>You haven’t applied to any gigs yet.</p>
-        : apps.map(({ _id, gigId, status, appliedAt }) => (
-            <div className="card mb-3" key={_id}>
-              <div className="card-body">
-                <h5>{gigId.title}</h5>
-                <p>Status: <strong>{status}</strong></p>
-                <p>Applied on: {new Date(appliedAt).toLocaleDateString()}</p>
-              </div>
-            </div>
-          ))
-      }
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th>Gig Title</th>
+            <th>Applicant Name</th>
+            <th>College</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Resume</th>
+          </tr>
+        </thead>
+        <tbody>
+          {applications.map(app => (
+            <tr key={app._id}>
+              <td>{app.gig?.title || '—'}</td>
+              <td>{app.name}</td>
+              <td>{app.collegeName}</td>
+              <td>{app.phone}</td>
+              <td>{app.email}</td>
+              <td>{app.status}</td>
+              <td>
+                <a
+                  href={`http://localhost:5000${app.resumeUrl}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View Resume
+                </a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
