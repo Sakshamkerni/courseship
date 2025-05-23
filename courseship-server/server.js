@@ -43,6 +43,8 @@ app.use('/api/gigs', gigRoutes);
 app.use('/api/applications', appRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/enrollments', require('./routes/enrollments'));
+
 
 // Serve uploaded files statically
 app.use('/uploads', express.static(uploadDir));

@@ -153,6 +153,9 @@ const Home = () => {
                 <li><Link to="/" className="text-light text-decoration-none">Home</Link></li>
                 <li><Link to="/courses" className="text-light text-decoration-none">Courses</Link></li>
                 <li><Link to="/dashboard" className="text-light text-decoration-none">Dashboard</Link></li>
+                 <li><Link to="/about" className="text-light text-decoration-none">About us</Link></li>
+                   <li><Link to="/terms" className="text-light text-decoration-none">Terms & Conditions</Link></li>
+                   <li><Link to="/contact" className="text-light text-decoration-none">Contact Us</Link></li>
               </ul>
             </div>
             <div className="col-md-4 mb-4">

@@ -12,9 +12,14 @@ import CourseDetails from './pages/CourseDetails';
 import CourseContent from './pages/CourseContent';
 import Login from './pages/login';
 import Register from './pages/register';
+import AboutUs from './pages/AboutUs';
+import TermsAndConditions from './pages/TermsConditions';
+import ContactUs from './pages/Contactus';
+
 
 // Protected / Profile
 import Profile from './pages/profile';
+import ResumeBuilder from './pages/ResumeBuilder';
 
 // Student Dashboard
 import Dashboard from './pages/dashboard/dashboard';
@@ -46,7 +51,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/courses/:id" element={<CourseDetails />} />
-        <Route path="/courses/content/:courseId" element={<CourseContent />} />
+        {/* <Route path="/courses/content/:courseId" element={<CourseContent />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
@@ -56,6 +61,9 @@ function App() {
             <Profile />
           </ProtectedRoute>
         } />
+
+<Route path="/resume-builder" element={<ResumeBuilder />} />
+
 
         {/* Student Dashboard */}
         <Route path="/dashboard/*" element={
@@ -108,6 +116,10 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/terms" element={<TermsAndConditions />} />
+        <Route path="/contact" element={<ContactUs />} />
+
 
         {/* Admin Dashboard with nested Manage Courses & Manage Users */}
         <Route path="/admin-dashboard/*" element={
